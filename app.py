@@ -23,5 +23,13 @@ def predict_api() :
     output = lr_model.predict(scaled_data)[0]
     return jsonify(output)
 
+@app.route('/predict',methods=['POST'])
+def predict() :
+    data = [float(x) for x in request.form.values()]
+    print(data)
+    scaled_data = scaler.transform(np.array(data).reshape(1,-1))
+    output = lr_model.predict(scaled_data)[0]
+    return render_template('home.html', prediction_text = 'The house price prediction is {}'.format(output))
+
 if __name__ == '__main__' :
     app.run(debug=True)
