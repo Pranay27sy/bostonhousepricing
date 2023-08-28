@@ -3,7 +3,7 @@ from flask import Flask,request,app,jsonify,url_for,render_template
 import numpy as np
 import pandas as pd
 
-app = Flask(__name__)
+boston_app = Flask(__name__)
 # Load the model
 with open('lr_model.pkl','rb') as file :
     lr_model = pickle.load(file)
@@ -11,11 +11,11 @@ with open('lr_model.pkl','rb') as file :
 with open('scaling.pkl','rb') as file :
     scaler = pickle.load(file)
 
-@app.route('/')
+@boston_app.route('/')
 def home():
     return render_template('home.html')
 
-@app.route('/predict_api',methods=['POST'])
+@boston_app.route('/predict_api',methods=['POST'])
 def predict_api() :
     data = request.json['data']
     print(data)
@@ -23,7 +23,7 @@ def predict_api() :
     output = lr_model.predict(scaled_data)[0]
     return jsonify(output)
 
-@app.route('/predict',methods=['POST'])
+@boston_app.route('/predict',methods=['POST'])
 def predict() :
     data = [float(x) for x in request.form.values()]
     print(data)
@@ -32,4 +32,4 @@ def predict() :
     return render_template('home.html', prediction_text = 'The house price prediction is {}'.format(output))
 
 if __name__ == '__main__' :
-    app.run(debug=True)
+    boston_app.run(debug=True)
